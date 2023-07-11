@@ -241,7 +241,7 @@ refreshNESjoypads:	@call every frame
 	str_ r0,joy0state
 	bx lr
 
-joycfg: .word 0x40ff01ff @byte0=auto mask, byte1=(saves R)bit2=SwapAB, byte2=R auto mask
+joycfg: .word 0x40fc01ff @byte0=auto mask, byte1=(saves R)bit2=SwapAB, byte2=R auto mask
 @bit 31=single/multi, 30,29=1P/2P, 27=(multi) link active, 24=reset signal received
 ssba2ssab: .byte 0x00,0x02,0x01,0x03, 0x04,0x06,0x05,0x07, 0x08,0x0a,0x09,0x0b, 0x0c,0xe0,0xd0,0x0f
 
