@@ -930,13 +930,39 @@ int using_flashcart() {
 
 void quickload() {
 	stateheader *sh;
-	int i;
+	int key,soundvol,tm0cnt,i;
 	
 	SAVE_FORBIDDEN;
 
 	if(!using_flashcart())
 		return;
 
+	FPSValue=0;					//Stop FPS meter
+	soundvol=REG_SGCNT0_L;
+	REG_SGCNT0_L=0;				//stop sound (GB)
+	tm0cnt=REG_TM0CNT;
+	REG_TM0CNT=0;				//stop sound (directsound)
+
+	drawtext_secondary(8, "   Do You Want to Load the",0);
+	drawtext_secondary(9, "      Most Recent Save?",0);
+	drawtext_secondary(10,"        A=YES, B=NO",0);
+	scrolll(1);
+	oldkey=~REG_P1;			//reset key input
+	do {
+		key=getmenuinput(10);
+		if(key&(B_BTN + R_BTN + L_BTN )){
+			REG_SGCNT0_L=soundvol;	//resume sound (GB)
+			REG_TM0CNT=tm0cnt;		//resume sound (directsound)
+			scrollr(2);
+			return;
+		}
+	} while(!(key&(A_BTN)));
+
+	oldkey=~REG_P1;			//reset key input
+	scrolll(2);
+	cls(3);
+	REG_SGCNT0_L=soundvol;	//resume sound (GB)
+	REG_TM0CNT=tm0cnt;		//resume sound (directsound)
 	i=findstate(checksum_this(),STATESAVE,&sh);
 	if(i>=0)
 		loadstate2(romnum,sh);
@@ -944,7 +970,7 @@ void quickload() {
 
 void quicksave() {
 	stateheader *sh;
-	int i;
+	int key,soundvol,tm0cnt,i;
 	
 	SAVE_FORBIDDEN;
 
@@ -957,8 +983,34 @@ void quicksave() {
 	make_ui_visible();
 	move_ui();
 	//setdarkness(7);	//darken
+	FPSValue=0;					//Stop FPS meter
+	soundvol=REG_SGCNT0_L;
+	REG_SGCNT0_L=0;				//stop sound (GB)
+	tm0cnt=REG_TM0CNT;
+	REG_TM0CNT=0;				//stop sound (directsound)
+
+	drawtext_secondary(9, "    Do You Want to Save?",0);
+	drawtext_secondary(10,"        A=YES, B=NO",0);
+	scrolll(1);
+	oldkey=~REG_P1;			//reset key input
+	do {
+		key=getmenuinput(10);
+		if(key&(B_BTN + R_BTN + L_BTN )){
+			REG_SGCNT0_L=soundvol;	//resume sound (GB)
+			REG_TM0CNT=tm0cnt;		//resume sound (directsound)
+			scrollr(2);
+			return;
+		}
+	} while(!(key&(A_BTN)));
+
+	oldkey=~REG_P1;			//reset key input
+	scrolll(2);
+	cls(3);
+
 	drawtext_secondary(9,"           Saving...",0);
 	scrolll(1);
+	REG_SGCNT0_L=soundvol;	//resume sound (GB)
+	REG_TM0CNT=tm0cnt;		//resume sound (directsound)
 	
 	i=savestate2();
 	if (i == 0 || i >= 57344 - 64)
@@ -978,7 +1030,7 @@ void quicksave() {
 	{
 		writeerror();
 	}
-	scrollr(2);
+	scrolll(2);
 	cls(3);
 }
 
