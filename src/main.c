@@ -589,7 +589,7 @@ void rommenu(void)
 		}
 	}
 #if CARTSRAM
-	if(autostate)quickload();
+	if(autostate)quickloadstartup();
 #endif
 	setdarkness(0);
 	make_ui_invisible();

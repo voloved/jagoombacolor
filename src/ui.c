@@ -17,7 +17,7 @@ void loadstate(int foo, void* dest){}
 
 #if !CARTSRAM
 //void savestatemenu(){} void loadstatemenu(){} void managesram(){}
-void quicksave(){} void quickload(){}
+void quicksave(){} void quickload(){} void quickloadstartup(){}
 #endif
 #if !MULTIBOOT
 //void multiboot(){}

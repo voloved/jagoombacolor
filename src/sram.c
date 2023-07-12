@@ -928,6 +928,20 @@ int using_flashcart() {
 	return (u32)textstart&0x8000000;
 }
 
+void quickloadstartup() {
+	stateheader *sh;
+	int i;
+	
+	SAVE_FORBIDDEN;
+
+	if(!using_flashcart())
+		return;
+
+	i=findstate(checksum_this(),STATESAVE,&sh);
+	if(i>=0)
+		loadstate2(romnum,sh);
+}
+
 void quickload() {
 	stateheader *sh;
 	int key,soundvol,tm0cnt,i;
@@ -936,6 +950,10 @@ void quickload() {
 
 	if(!using_flashcart())
 		return;
+
+	i=findstate(checksum_this(),STATESAVE,&sh);
+	if(i<0)
+		return
 
 	FPSValue=0;					//Stop FPS meter
 	soundvol=REG_SGCNT0_L;
@@ -963,9 +981,7 @@ void quickload() {
 	cls(3);
 	REG_SGCNT0_L=soundvol;	//resume sound (GB)
 	REG_TM0CNT=tm0cnt;		//resume sound (directsound)
-	i=findstate(checksum_this(),STATESAVE,&sh);
-	if(i>=0)
-		loadstate2(romnum,sh);
+	loadstate2(romnum,sh);
 }
 
 void quicksave() {
@@ -1009,8 +1025,6 @@ void quicksave() {
 
 	drawtext_secondary(9,"           Saving...",0);
 	scrolll(1);
-	REG_SGCNT0_L=soundvol;	//resume sound (GB)
-	REG_TM0CNT=tm0cnt;		//resume sound (directsound)
 	
 	i=savestate2();
 	if (i == 0 || i >= 57344 - 64)
@@ -1019,6 +1033,8 @@ void quicksave() {
 		scrollr(2);
 		//cls(2);
 		//setdarkness(0);	//darken
+		REG_SGCNT0_L=soundvol;	//resume sound (GB)
+		REG_TM0CNT=tm0cnt;		//resume sound (directsound)
 		return;
 	}
 
@@ -1032,6 +1048,8 @@ void quicksave() {
 	}
 	scrolll(2);
 	cls(3);
+	REG_SGCNT0_L=soundvol;	//resume sound (GB)
+	REG_TM0CNT=tm0cnt;		//resume sound (directsound)
 }
 
 int backup_gb_sram(int called_from)

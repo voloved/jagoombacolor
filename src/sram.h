@@ -51,6 +51,7 @@ int findstate(u32 checksum,int type,stateheader **stateptr);
 void uncompressstate(int rom,stateheader *sh);
 int using_flashcart(void);
 void quickload(void);
+void quickloadstartup(void);
 void quicksave(void);
 int backup_gb_sram(int called_from);
 int save_new_sram(u8 *SRAM_SOURCE);

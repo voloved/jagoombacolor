@@ -3,3 +3,6 @@ SymbolTable.txt
 *.gba
 *.elf
 build
+*.gb
+*.sav
+*.exe
