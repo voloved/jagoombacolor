@@ -987,6 +987,7 @@ void quickload() {
 void quicksave() {
 	stateheader *sh;
 	int key,soundvol,tm0cnt,i;
+	int deciSecToWaitWhenExiting = 20;
 	
 	SAVE_FORBIDDEN;
 
@@ -1012,9 +1013,9 @@ void quicksave() {
 	do {
 		key=getmenuinput(10);
 		if(key&(B_BTN + R_BTN + L_BTN )){
+			scrollr(2);
 			REG_SGCNT0_L=soundvol;	//resume sound (GB)
 			REG_TM0CNT=tm0cnt;		//resume sound (directsound)
-			scrollr(2);
 			return;
 		}
 	} while(!(key&(A_BTN)));
@@ -1048,8 +1049,29 @@ void quicksave() {
 	}
 	scrolll(2);
 	cls(3);
-	REG_SGCNT0_L=soundvol;	//resume sound (GB)
-	REG_TM0CNT=tm0cnt;		//resume sound (directsound)
+
+	drawtext_secondary(9, "           Exit?",0);
+	drawtext_secondary(10,"        A=YES, B=NO",0);
+	scrolll(1);
+	oldkey=~REG_P1;			//reset key input
+	do {
+		key=getmenuinput(10);
+		if(key&(B_BTN + R_BTN + L_BTN )){
+			scrollr(2);
+			REG_SGCNT0_L=soundvol;	//resume sound (GB)
+			REG_TM0CNT=tm0cnt;		//resume sound (directsound)
+			return;
+		}
+	} while(!(key&(A_BTN)));
+	oldkey=~REG_P1;			//reset key input
+	scrolll(2);
+	cls(3);
+
+	drawtext_secondary(9, "          Exiting...",0);
+	scrolll(1);
+	for(i=0;i<(6*deciSecToWaitWhenExiting);i++)	//(deciSecToWaitWhenExiting decisecond wait to avoid save corruption)
+		waitframe();
+	exit_();
 }
 
 int backup_gb_sram(int called_from)
