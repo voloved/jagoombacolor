@@ -72,12 +72,12 @@ line0:
 
 	tst r0,#0x100		@R?
 	tstne r1,#8		@START:
-	ldrne r1,=quickload
+	ldrne r1,=quicksave
 	bxne r1
 
 	tst r0,#0x100		@R?
 	tstne r1,#4		@SELECT:
-	ldrne r1,=quicksave
+	ldrne r1,=quickload
 	bxne r1
 line0x:
 	bl_long refreshNESjoypads	@Z=1 if communication ok
